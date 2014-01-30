@@ -60,11 +60,17 @@ graph_file = open("colike.graphml", "w")
 write(graph_file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 write(graph_file, "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n")
 write(graph_file, "<graph id=\"G\" edgedefault=\"undirected\">\n")
+write(graph_file, "<key id=\"colikes_num\" for=\"edge\" attr.name=\"colilkes_num\" attr.type=\"int\"/>\n")
+write(graph_file, "<key id=\"colikes\" for=\"edge\" attr.name=\"colilkes\" attr.type=\"string\"/>\n")
 
 for v in colike_users_graph.vertices
     @printf(graph_file, "<node id=\"n%d\" />\n", vertex_index(v, colike_users_graph))
     for e in filter(e -> (e.source.key < e.target.key), out_edges(v, colike_users_graph))
-        @printf(graph_file, "<edge source=\"n%d\" target=\"n%d\" />", vertex_index(e.source, colike_users_graph), vertex_index(e.target, colike_users_graph))
+        @printf(graph_file, "<edge source=\"n%d\" target=\"n%d\">\n", vertex_index(e.source, colike_users_graph), vertex_index(e.target, colike_users_graph))
+        for attr in e.attributes
+            @printf(graph_file, "<data key=\"%s\">%s</data>\n", attr[1], attr[2])
+        end
+        write(graph_file, "</edge>\n")
     end
 end
 
