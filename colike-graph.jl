@@ -50,7 +50,7 @@ for pair in colike_users
     append!(edges, filter(e -> in(u, [e.source, e.target]), out_edges(v, colike_users_graph)))
     for e in edges
         e.attributes["colikes"] = pair[2]
-        e.attributes["coliles_num"] = length(pair[2])
+        e.attributes["colikes_num"] = length(pair[2])
     end
 end
 
