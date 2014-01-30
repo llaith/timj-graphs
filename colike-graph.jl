@@ -2,6 +2,7 @@ using Graphs
 
 file = open("likes-10000.csv", "r")
 data = readcsv(file,ASCIIString)
+close(file)
 
 # Simple statistics
 @printf("Analysing %d likes on %d jams by %d users.\n", length(data[:,1]), length(unique(data[:,1])), length(unique(data[:,2])))
@@ -53,4 +54,20 @@ for pair in colike_users
     end
 end
 
-@printf("Generated co-like graph with %d vertices and %d edges", num_vertices(colike_users_graph), num_edges(colike_users_graph))
+@printf("Generated co-like graph with %d vertices and %d edges.\n", num_vertices(colike_users_graph), num_edges(colike_users_graph))
+
+graph_file = open("colike.graphml", "w")
+write(graph_file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+write(graph_file, "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n")
+write(graph_file, "<graph id=\"G\" edgedefault=\"undirected\">\n")
+
+for v in colike_users_graph.vertices
+    @printf(graph_file, "<node id=\"n%d\" />\n", vertex_index(v, colike_users_graph))
+    for e in filter(e -> (e.source.key < e.target.key), out_edges(v, colike_users_graph))
+        @printf(graph_file, "<edge source=\"n%d\" target=\"n%d\" />", vertex_index(e.source, colike_users_graph), vertex_index(e.target, colike_users_graph))
+    end
+end
+
+write(graph_file, "</graph>\n")
+write(graph_file, "</graphml>")
+close(graph_file)
