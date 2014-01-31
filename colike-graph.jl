@@ -18,11 +18,22 @@ for i in 1:length(data[:,1])
     end
 end
 
+println("Building graph..")
+
 colike_users_graph = inclist(KeyVertex{ASCIIString}, ExEdge{KeyVertex{ASCIIString}}, is_directed=false)
 
 vertices = Dict()
+i = 0
+num_users = length(unique(data[:,2]))
 for user1 in users
+    i += 1
+    @printf("Analysing user %d of %d\r", i, num_users)
+    j = 0
     for user2 in users
+        if j % 1000 == 0
+            @printf("Analysing user % 6d of %d (% 6d/%d inner)\r", i, num_users, j, num_users)
+        end
+        j += 1
         if user1[1] < user2[1]
             colikes = intersect(user1[2], user2[2])
             if length(colikes) > 0
