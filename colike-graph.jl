@@ -49,9 +49,13 @@ for user1 in users
                 else
                     v = vertices[user2[1]]
                 end
-                add_edge!(colike_users_graph, u, v)
-                edges = filter(e -> in(v, [e.source, e.target]), out_edges(u, colike_users_graph))
-                append!(edges, filter(e -> in(u, [e.source, e.target]), out_edges(v, colike_users_graph)))
+
+                # Instead of add_edge, we are using our own solution since the built-in does not return the edges
+                edges = (ExEdge{KeyVertex{ASCIIString}}(colike_users_graph.nedges + 1, u, v),
+                          ExEdge{KeyVertex{ASCIIString}}(colike_users_graph.nedges + 2, v, u))
+                push!(colike_users_graph.inclist[vertex_index(u)], edges[1])
+                push!(colike_users_graph.inclist[vertex_index(v)], edges[2])
+                colike_users_graph.nedges += 2
                 for e in edges
                     e.attributes["colikes"] = colikes
                     e.attributes["colikes_num"] = length(colikes)
