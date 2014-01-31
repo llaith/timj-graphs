@@ -1,6 +1,6 @@
 using Graphs
 
-file = open("likes-10000.csv", "r")
+file = open("likes.csv", "r")
 data = readcsv(file,ASCIIString)
 close(file)
 
