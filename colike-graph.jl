@@ -18,39 +18,35 @@ for i in 1:length(data[:,1])
     end
 end
 
-coliked_users = Set()
-colike_users = Dict()
+colike_users_graph = inclist(KeyVertex{ASCIIString}, ExEdge{KeyVertex{ASCIIString}}, is_directed=false)
+
+vertices = Dict()
 for user1 in users
     for user2 in users
         if user1[1] < user2[1]
             colikes = intersect(user1[2], user2[2])
             if length(colikes) > 0
-                colike_users[(user1[1], user2[1])] = colikes
-                push!(coliked_users, user1[1])
-                push!(coliked_users, user2[1])
+                if (!haskey(vertices, user1[1]))
+                    u = KeyVertex{ASCIIString}(num_vertices(colike_users_graph) + 1, user1[1])
+                    vertices[user1[1]] = add_vertex!(colike_users_graph, u)
+                else
+                    u = vertices[user1[1]]
+                end
+                if (!haskey(vertices, user2[1]))
+                    v = KeyVertex{ASCIIString}(num_vertices(colike_users_graph) + 1, user2[1])
+                    vertices[user2[1]] = add_vertex!(colike_users_graph, v)
+                else
+                    v = vertices[user2[1]]
+                end
+                add_edge!(colike_users_graph, u, v)
+                edges = filter(e -> in(v, [e.source, e.target]), out_edges(u, colike_users_graph))
+                append!(edges, filter(e -> in(u, [e.source, e.target]), out_edges(v, colike_users_graph)))
+                for e in edges
+                    e.attributes["colikes"] = colikes
+                    e.attributes["colikes_num"] = length(colikes)
+                end
             end
         end
-    end
-end
-
-@printf("There are %d pairs of users who liked at least one common jam.\n", length(colike_users))
-
-colike_users_graph = inclist(KeyVertex{ASCIIString}, ExEdge{KeyVertex{ASCIIString}}, is_directed=false)
-vertices = Dict()
-for user in coliked_users
-    vertex = KeyVertex{ASCIIString}(num_vertices(colike_users_graph) + 1, user)
-    vertices[user] = add_vertex!(colike_users_graph, vertex)
-end
-
-for pair in colike_users
-    u = vertices[pair[1][1]]
-    v = vertices[pair[1][2]]
-    add_edge!(colike_users_graph, u, v)
-    edges = filter(e -> in(v, [e.source, e.target]), out_edges(u, colike_users_graph))
-    append!(edges, filter(e -> in(u, [e.source, e.target]), out_edges(v, colike_users_graph)))
-    for e in edges
-        e.attributes["colikes"] = pair[2]
-        e.attributes["colikes_num"] = length(pair[2])
     end
 end
 
