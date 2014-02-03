@@ -21,13 +21,13 @@ let artists_u = Dict{UTF8String, Vector{UTF8String}}()
     len = length(artists_u)
     i = 0
     for artist in artists_u
-        @printf("\rProcessing artist crossproduct % 6d/%d (% 3d%%)                    ", i, len, div(i,len))
+        @printf("\rProcessing artist crossproduct % 6d/%d (% 3d%%)                    ", i, len, div(i*100,len))
         i += 1
         j = 0
         for user1 in artist[2]
             j += 1
             if j % 25 == 0
-                @printf("\rProcessing artist crossproduct % 6d/%d (% 3d%%) (user % 4d/%d)", i, len, div(i,len), j, length(artist[2]))
+                @printf("\rProcessing artist crossproduct % 6d/%d (% 3d%%) (user % 4d/%d)", i, len, div(i*100,len), j, length(artist[2]))
             end
             for user2 in artist[2]
                 if user1 < user2
