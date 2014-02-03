@@ -5,12 +5,12 @@ user_ids = Set{UTF8String}()
 let artists_u = Dict{UTF8String, Vector{UTF8String}}()
     let data = readtable("jams.csv", header=false), len = length(data[:,2])
         for i in 1:len
-            user_id = data[i,2]
-            push!(user_ids, user_id)
-            artist = data[i,3]
-            if isna(artist)
+            if isna(data[i,3])
                 continue
             end
+            user_id::UTF8String = data[i,2]
+            push!(user_ids, user_id)
+            artist::UTF8String = data[i,3]
             if !haskey(artists_u, artist)
                 artists_u[artist] = UTF8String[]
             end
