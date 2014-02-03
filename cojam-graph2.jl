@@ -39,6 +39,7 @@ let artists_u = Dict{UTF8String, Vector{UTF8String}}()
             end
         end
     end
+    println()
 end
 
 println("Building graph…")
