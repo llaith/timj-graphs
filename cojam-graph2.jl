@@ -1,6 +1,6 @@
 using DataFrames
 
-users = Dict{(UTF8String,UTF8String), Vector{UTF8String}}()
+users = Dict{UTF8String, Dict{UTF8String,Int}}()
 user_ids = Set{UTF8String}()
 let artists_u = Dict{UTF8String, Vector{UTF8String}}()
     let data = readtable("jams.csv", header=false), len = length(data[:,2])
@@ -31,10 +31,13 @@ let artists_u = Dict{UTF8String, Vector{UTF8String}}()
             end
             for user2 in artist[2]
                 if user1 < user2
-                    if !haskey(users, (user1, user2))
-                        users[(user1, user2)] = []
+                    if !haskey(users, user1)
+                        users[user1] = Dict{UTF8String,Int}()
                     end
-                    push!(users[(user1, user2)], artist[1])
+                    if !haskey(users[user1], user2)
+                        users[user1][user2] = 0
+                    end
+                    users[user1][user2] += 1
                 end
             end
         end
@@ -57,11 +60,12 @@ for user in user_ids
 end
 
 println("…writing edges.")
-for edge in users
-    @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", edge[1][1], edge[1][2])
-    @printf(graph_file, "\t\t<data key=\"cojams\">%s</data>\n", join(edge[2],","))
-    @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", length(edge[2]))
-    write(graph_file, "\t</edge>\n")
+for (user1,snd) in users
+    for (user2,count) in snd
+        @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
+        @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", count)
+        write(graph_file, "\t</edge>\n")
+    end
 end
 println("\n…done.")
 
