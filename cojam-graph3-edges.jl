@@ -57,7 +57,7 @@ end
 
 graph_file = open("cojam3.graphml", "a")
 
-println("Writing edges…")
+print("Writing edges…")
 for (user1,snd) in users
     for (user2,count) in snd
         @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
@@ -65,5 +65,5 @@ for (user1,snd) in users
         write(graph_file, "\t</edge>\n")
     end
 end
-println("…done.")
+println("done.")
 close(graph_file)
