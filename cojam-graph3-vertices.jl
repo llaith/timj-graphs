@@ -38,9 +38,9 @@ end
 
 graph_file = open("cojam3.graphml", "a")
 
-println("Writing vertices…")
+print("Writing vertices…")
 for user in user_ids
     @printf(graph_file, "\t<node id=\"%s\" />\n", user)
 end
-println("…done.")
+println("done.")
 close(graph_file)
