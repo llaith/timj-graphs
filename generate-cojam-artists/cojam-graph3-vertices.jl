@@ -4,7 +4,7 @@ user_ids = Set{UTF8String}()
 # In the end we will only write out user_ids as vertices if they have at least one neighbour
 used_user_ids = Set{UTF8String}()
 let artists_u = Dict{UTF8String, Vector{UTF8String}}()
-    let data = readtable("jams.csv", header=false), len = length(data[:,2])
+    let data = readtable("../jams.csv", header=false), len = length(data[:,2])
         for i in 1:len
             if isna(data[i,3])
                 continue

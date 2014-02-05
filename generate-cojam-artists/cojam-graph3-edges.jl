@@ -6,7 +6,7 @@ upper_idx = int(ARGS[2])
 users = Dict{UTF8String, Dict{UTF8String,Int}}()
 let artists_u = Dict{UTF8String, Vector{UTF8String}}(), user_id2idx = Dict{UTF8String,Int}()
     idx::Int = 1
-    let data = readtable("jams.csv", header=false), len = length(data[:,2]), user_ids = Set{UTF8String}()
+    let data = readtable("../jams.csv", header=false), len = length(data[:,2]), user_ids = Set{UTF8String}()
         for i in 1:len
             if isna(data[i,3])
                 continue
