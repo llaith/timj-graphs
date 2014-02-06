@@ -1,5 +1,7 @@
 using DataFrames
 
+min_intersection = int(ARGS[1])
+
 user_ids = Set{UTF8String}()
 # In the end we will only write out user_ids as vertices if they have at least one neighbour
 used_user_ids = Set{UTF8String}()
@@ -37,7 +39,7 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}()
     println()
 end
 
-graph_file = open("cojam-tracks.graphml", "a")
+graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
 print("Writing vertices…")
 for user in user_ids
