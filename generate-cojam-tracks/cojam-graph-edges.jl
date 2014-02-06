@@ -1,7 +1,8 @@
 using DataFrames
 
-lower_idx = int(ARGS[1])
-upper_idx = int(ARGS[2])
+min_intersection = int(ARGS[1])
+lower_idx = int(ARGS[2])
+upper_idx = int(ARGS[3])
 
 users = Dict{UTF8String, Dict{UTF8String,Int}}()
 let tracks_u = Dict{UTF8String, Vector{UTF8String}}(), user_id2idx = Dict{UTF8String,Int}()
@@ -54,14 +55,16 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}(), user_id2idx = Dict{UTF8St
     println()
 end
 
-graph_file = open("cojam-tracks.graphml", "a")
+graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
 print("Writing edges…")
 for (user1,snd) in users
     for (user2,count) in snd
-        @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
-        @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", count)
-        write(graph_file, "\t</edge>\n")
+        if count >= min_intersection
+            @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
+            @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", count)
+            write(graph_file, "\t</edge>\n")
+        end
     end
 end
 println("done.")
