@@ -1,3 +1,4 @@
 generate-cojam-artists/cojam3.graphml
 jams.csv
 likes.csv
+generate-cojam-tracks/cojam-tracks-*.graphml
