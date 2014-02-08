@@ -52,11 +52,12 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}(), user_id2idx = Dict{UTF8St
             end
         end
     end
-    println()
 end
 
 graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
+# Clear output line
+print("\r                                                          \r")
 print("Writing edges…")
 for (user1,snd) in users
     for (user2,count) in snd
