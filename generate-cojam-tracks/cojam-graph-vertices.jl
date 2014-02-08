@@ -36,11 +36,12 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}()
             end
         end
     end
-    println()
 end
 
 graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
+# Clear output line
+print("\r                                                          \r")
 print("Writing vertices…")
 for user in user_ids
     @printf(graph_file, "\t<node id=\"%s\" />\n", user)
