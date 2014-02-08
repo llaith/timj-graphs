@@ -39,3 +39,6 @@ julia cojam-graph-edges.jl $1 1573000 1574000
 julia cojam-graph-edges.jl $1 1574000 1575000
 echo "</graph>" >> cojam-tracks-$1.graphml
 echo "</graphml>" >> cojam-tracks-$1.graphml
+EDGES=`grep '</edge>' cojam-tracks-$1.graphml | wc -l`
+VERTICES=`grep '<node ' cojam-tracks-$1.graphml | wc -l`
+echo Generated graph with $VERTICES vertices and $EDGES edges.
