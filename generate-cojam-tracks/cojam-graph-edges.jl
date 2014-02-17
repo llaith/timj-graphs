@@ -52,30 +52,35 @@ function parsecsv()
 end
 
 
+function write_edges(users::Dict{UTF8String, Dict{UTF8String,Int}})
+    num_edges::Int = 0
+    for (user1,snd) in users
+        for (user2,count) in snd
+            if count >= min_intersection
+                num_edges += 1
+                @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
+                @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", count)
+                write(graph_file, "\t</edge>\n")
+            end
+        end
+    end
+    return num_edges
+end
+
 min_intersection = int(ARGS[1])
 lower_idx = int(ARGS[2])
 upper_idx = int(ARGS[3])
 users = Dict{UTF8String, Dict{UTF8String,Int}}()
 
 (tracks_u, user_id2idx) = parsecsv()
+graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
 @printf("Generating edges (u,v) for %d <= u < %d…", lower_idx, upper_idx)
 users = generate_edges(tracks_u, user_id2idx, lower_idx, upper_idx)
 println("done.")
 
-graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
 
 print("Writing edges…")
-num_edges = 0
-for (user1,snd) in users
-    for (user2,count) in snd
-        if count >= min_intersection
-            num_edges += 1
-            @printf(graph_file, "\t<edge source=\"%s\" target=\"%s\">\n", user1, user2)
-            @printf(graph_file, "\t\t<data key=\"cojams_num\">%d</data>\n", count)
-            write(graph_file, "\t</edge>\n")
-        end
-    end
-end
+num_edges = write_edges(users)
 @printf("wrote %d edges.\n", num_edges)
 close(graph_file)
