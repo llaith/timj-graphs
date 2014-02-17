@@ -24,7 +24,7 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}()
     @printf("Number of vertices: %d\n", length(user_ids))
 
     for track in tracks_u
-        if length(track[2]) > 0
+        if length(track[2]) > 1
             for user in track[2]
                 push!(used_user_ids, user)
             end
