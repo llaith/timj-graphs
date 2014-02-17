@@ -4,14 +4,10 @@ echo "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http:
 echo "<graph id=\"G\" edgedefault=\"undirected\">" >> cojam-tracks-$1.graphml
 echo "  <key id=\"cojams_num\" for=\"edge\" attr.name=\"cojams_num\" attr.type=\"int\"/>" >> cojam-tracks-$1.graphml
 julia cojam-graph-vertices.jl $1
-julia cojam-graph-edges.jl $1 0 80000
-julia cojam-graph-edges.jl $1 80000   160000
-julia cojam-graph-edges.jl $1 160000  240000
-julia cojam-graph-edges.jl $1 240000  320000
-julia cojam-graph-edges.jl $1 320000  400000
-julia cojam-graph-edges.jl $1 400000  480000
-julia cojam-graph-edges.jl $1 480000  560000
-julia cojam-graph-edges.jl $1 560000  640000
+julia cojam-graph-edges.jl $1 0       160000
+julia cojam-graph-edges.jl $1 160000  320000
+julia cojam-graph-edges.jl $1 320000  480000
+julia cojam-graph-edges.jl $1 480000  640000
 julia cojam-graph-edges.jl $1 640000  720000
 julia cojam-graph-edges.jl $1 720000  800000
 julia cojam-graph-edges.jl $1 800000  880000
