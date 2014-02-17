@@ -87,5 +87,7 @@ for i in 1:size(partition,1)
     @printf("wrote %d edges.\n", num_edges)
 end
 
+write(graph_file, "</graph>\n")
+write(graph_file, "</graphml>\n")
 close(graph_file)
 

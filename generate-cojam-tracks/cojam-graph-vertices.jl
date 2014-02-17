@@ -23,13 +23,7 @@ let tracks_u = Dict{UTF8String, Vector{UTF8String}}()
     end
     @printf("Number of vertices: %d\n", length(user_ids))
 
-    len = length(tracks_u)
-    i = 0
     for track in tracks_u
-        if i % 100 == 0
-            @printf("\rProcessing track crossproduct % 7d/%d (% 3d%%)", i, len, div(i*100,len))
-        end
-        i += 1
         if length(track[2]) > 0
             for user in track[2]
                 push!(used_user_ids, user)
