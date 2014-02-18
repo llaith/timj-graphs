@@ -71,7 +71,12 @@ min_intersection = int(ARGS[1])
 users = Dict{UTF8String, Dict{UTF8String,Int}}()
 
 (tracks_u, user_id2idx) = parsecsv()
-graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "a")
+graph_file = open(string("cojam-tracks-",min_intersection,".graphml"), "w")
+
+write(graph_file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+write(graph_file, "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n")
+write(graph_file, "<graph id=\"G\" edgedefault=\"undirected\">\n")
+write(graph_file, "  <key id=\"cojams_num\" for=\"edge\" attr.name=\"cojams_num\" attr.type=\"int\"/>\n")
 
 used_user_ids = Set{UTF8String}()
 for track in tracks_u
@@ -87,16 +92,15 @@ for user in used_user_ids
 end
 println("done.")
 
-partition = [0       160000 ; 160000  320000; 320000  480000; 480000  640000; 640000  720000; 720000  800000; 800000  880000; 880000  960000; 960000  1040000; 1040000 1120000; 1120000 1200000; 1200000 1280000; 1280000 1360000; 1360000 1440000; 1440000 1480000; 1480000 1500000; 1500000 1520000; 1520000 1530000; 1530000 1540000; 1540000 1550000; 1550000 1555000; 1555000 1560000; 1560000 1565000; 1565000 1570000; 1570000 1571000; 1571000 1572000; 1572000 1573000; 1573000 1574000; 1574000 1575000]
+partition = [0 320000; 320000  480000; 480000  640000; 640000  720000; 720000  800000; 800000  880000; 880000  960000; 960000  1040000; 1040000 1120000; 1120000 1200000; 1200000 1280000; 1280000 1360000; 1360000 1440000; 1440000 1480000; 1480000 1500000; 1500000 1520000; 1520000 1530000; 1530000 1540000; 1540000 1550000; 1550000 1555000; 1555000 1560000; 1560000 1565000; 1565000 1570000; 1570000 1571000; 1571000 1572000; 1572000 1573000; 1573000 1574000; 1574000 1575000]
 
 for i in 1:size(partition,1)
     lower_idx = partition[i,1]
     upper_idx = partition[i,2]
     @printf("Generating edges (u,v) for %d <= u < %d…", lower_idx, upper_idx)
     users = generate_edges(tracks_u, user_id2idx, lower_idx, upper_idx)
-    println("done.")
 
-    print("Writing edges…")
+    print("writing edges…")
     num_edges = write_edges(users)
     @printf("wrote %d edges.\n", num_edges)
 end
